@@ -1,15 +1,31 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host = "localhost",
-    user ="root",
-    password = "",
-    database = "formativa"
-)
+class Conectar:
+    def __init__(self):
+        self.__db = mysql.connector.connect(
+            host = 'localhost',
+            user = 'root',
+            password = '', 
+            database = 'formativa'
+        )
+        
+        self.__cursor = self.__db.cursor()
 
-mycursor = mydb.cursor ()
+    def ejecutar(self, sql):
+        try:
+            self.__cursor.execute(sql)
+            self.__db.commit()
+            resultado = self.__cursor.rowcount
+            return resultado
+        except mysql.connector.Error as e:
+            return 'Se ha producido un error: '+str(e)
 
-mycursor.execute("SHOW TABLES")
+    def listarTodos(self, sql):
+        self.__cursor.execute(sql)
+        lista = self.__cursor.fetchall()
+        return lista
 
-for x in mycursor:
-    print(x)
+    def listarUno(self, sql):
+        self.__cursor.execute(sql)
+        tupla = self.__cursor.fetchone()
+        return tupla
