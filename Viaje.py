@@ -1,26 +1,34 @@
-from Conectar import Conectar
+from clases.Conectar import Conectar
 
 class Viaje:
-    def __init__(self, id, ciudad_inicio, ciudad_fin):
-        self.id = id
-        self.ciudad_inicio = ciudad_inicio
-        self.ciudad_fin = ciudad_fin
-        self.conectar = Conectar()
-    
+    def __init__(self, id = 0, ciudadInicio = '', ciudadFin = ''):
+        self.__id = id
+        self.__ciudadInicio = ciudadInicio
+        self.__ciudadFin = ciudadFin
+        self.__conectar = Conectar()
+
     def listarViajes(self):
-        sql = f"SELECT * FROM viajes WHERE ciudad_inicio = '{self.ciudad_inicio}' AND ciudad_fin = '{self.ciudad_fin}'"
-        resultados = self.conectar.listarTodos(sql)
-        return resultados
-    
+        sql = f"SELECT * FROM viaje WHERE ciudadInicio = '{self.__ciudadInicio}' AND ciudadFin = '{self.__ciudadFin}'"
+        viajes = self.__conectar.listarTodos(sql)
+        return viajes
+
     def listarViaje(self):
-        sql = f"SELECT * FROM viajes WHERE id = {self.id}"
-        resultado = self.conectar.listarUno(sql)
-        return resultado
-    
+        sql = f"SELECT * FROM viaje WHERE id = {self.__id}"
+        viaje = self.__conectar.listarUno(sql)
+        return viaje
+
     def disminuirViaje(self):
-        sql = f"UPDATE viajes SET cantidad = cantidad - 1 WHERE id = {self.id}"
-        self.conectar.ejecutar(sql)
-    
-    def aumentarViaje(self):
-        sql = f"UPDATE viajes SET cantidad = cantidad + 1 WHERE id = {self.id}"
-        self.conectar.ejecutar(sql)
+        sql = f"UPDATE viaje SET cantidad = cantidad - 1 WHERE id = {self.__id}"
+        resultado = self.__conectar.ejecutar(sql)
+
+        if resultado == 1:
+            resultado = 'Se ha actualizado la cantidad'
+        elif resultado == 0:
+            resultado = 'No se ha actualizado la cantidad'
+
+        return resultado
+
+    def cantidadViajes(self):
+        sql = f"SELECT cantidad FROM viaje WHERE id = {self.__id}"
+        tupla = self.__conectar.listarUno(sql)
+        return tupla
